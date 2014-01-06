@@ -13,10 +13,7 @@ Created by Craig Gleckman
 PalaceGame::PalaceGame()
 {
 	//Initialize all variables
-	//deck, drawPile, midPile, deadPile, players;
-	//playerOne, playerTwo, playerThree, playerFour;
 	turn = 0;
-	//0 = NO | 1 = YES
 	gameover = false;
 
 	//declare local variables
@@ -26,6 +23,7 @@ PalaceGame::PalaceGame()
 	cout << "How many players? (Enter 2-4)" << endl;
 	cin >> numPlayers;
 
+	//check valid num players
 	while(numPlayers < 2 || numPlayers > 4)
 	{
 		cout << "Please enter a valid number of Players (2-4)" << endl;
@@ -49,25 +47,33 @@ PalaceGame::~PalaceGame()
 
 void PalaceGame::setupGame(const int PLAYERCOUNT)
 {
-	if(PLAYERCOUNT != 0)
+	//Confirm valid player amount
+	if(PLAYERCOUNT >= 2 && PLAYERCOUNT <= 4)
 	{
 		cout << "Palace Card Game Loading..." << endl;
 
+		//Allows each player to pick a name
 		CreatePlayers(PLAYERCOUNT, players,  dealer);
-	
+		
+		//Make sure that players array (setup in CreatePlayers) worked
 		if(players.size() == PLAYERCOUNT)
 		{
 			cout << "CreatePlayers ran successfully" << endl;
-			CreateDeck(deck);
+			CreateDeck(deck); //forms the 52 card deck
+
+			//Make sure deck was created properly (52 cards)
 			if(deck.size() == 52)
 			{
 				cout << "CreateDeck ran successfully" << endl;
-				ShuffleDeck(deck);
+				ShuffleDeck(deck); //randomizes the deck (when created it is created in rank and suit order)
+
+				//Recheck deck size to make sure shuffle did not mess anything up
 				if(deck.size() == 52)
 				{
 					cout << "ShuffleDeck ran successfully" << endl;
-					DealGame(PLAYERCOUNT);
+					DealGame(PLAYERCOUNT); //Gives each player 3 palace cards and then 6 cards to start with
 					
+					//Make sure each player has 6 cards in his/her hand at start
 					for(int i=0; i<PLAYERCOUNT; i++)
 					{
 						if(players[i].getHandCount() != 6)
@@ -76,9 +82,9 @@ void PalaceGame::setupGame(const int PLAYERCOUNT)
 							break;
 						} //end if
 					} //end for
+					ChooseTopOfPalace(players); //Asks each player which 3 cards from their hand they would like to use for the OnTopOfPalace cards
 					
-					ChooseTopOfPalace(players);
-					
+					//Make sure each player has 3 cards left after choosing top of palace
 					for(int i=0; i<PLAYERCOUNT; i++)
 					{
 						if(players[i].getTopOfPalaceCount() != 3)
@@ -87,12 +93,14 @@ void PalaceGame::setupGame(const int PLAYERCOUNT)
 							break;
 						}//end if
 					}//end for
-	
-					PlayGame(PLAYERCOUNT);
+					PlayGame(PLAYERCOUNT); //Starts with player to the left of the dealer
+
+					//Gameover should be true after playgame is finished
 					if(!gameover)
 					{
 						cout << "Something went wrong WITH playGame" << endl;
 					}
+
 					else
 					{
 						cout << "Good-Bye!" << endl;
@@ -123,7 +131,11 @@ void PalaceGame::setupGame(const int PLAYERCOUNT)
 
 void PalaceGame::CreatePlayers(const int PLAYERCOUNT, vector<Player> &players, const int DEALER)
 {
+	//Declare local variables
 	string input;
+
+	//Depending on PLAYERCOUNT set players into a vector and let them give their name
+	//Determine order of players in vector by who was randomly choosen as dealer
 	if(PLAYERCOUNT == 2)
 	{
 		cout << "Please give a name to Player1: " << endl;
@@ -139,7 +151,7 @@ void PalaceGame::CreatePlayers(const int PLAYERCOUNT, vector<Player> &players, c
 			players.push_back(playerTwo);
 			players.push_back(playerOne);
 		}
-		//Dealer always last
+	
 		else if(dealer == 1)
 		{
 			players.push_back(playerOne);
@@ -156,6 +168,7 @@ void PalaceGame::CreatePlayers(const int PLAYERCOUNT, vector<Player> &players, c
 			cout << players[i].getName() << endl;
 		}
 	}//end if
+
 	else if(PLAYERCOUNT == 3)
 	{
 		cout << "Please give a name to Player1: " << endl;
@@ -175,14 +188,14 @@ void PalaceGame::CreatePlayers(const int PLAYERCOUNT, vector<Player> &players, c
 			players.push_back(playerThree);
 			players.push_back(playerOne);
 		}
-		//Dealer always last
+		
 		else if(dealer == 1)
 		{
 			players.push_back(playerThree);
 			players.push_back(playerOne);
 			players.push_back(playerTwo);
 		}
-		//Dealer always last
+		
 		else if(dealer == 2)
 		{
 			players.push_back(playerOne);
@@ -200,6 +213,7 @@ void PalaceGame::CreatePlayers(const int PLAYERCOUNT, vector<Player> &players, c
 			cout << players[i].getName() << endl;
 		}
 	}//end elseif
+
 	else if(PLAYERCOUNT == 4)
 	{
 		cout << "Please give a name to Player1: " << endl;
@@ -223,7 +237,7 @@ void PalaceGame::CreatePlayers(const int PLAYERCOUNT, vector<Player> &players, c
 			players.push_back(playerFour);
 			players.push_back(playerOne);
 		}
-		//Dealer always last
+		
 		else if(dealer == 1)
 		{
 			players.push_back(playerThree);
@@ -231,7 +245,7 @@ void PalaceGame::CreatePlayers(const int PLAYERCOUNT, vector<Player> &players, c
 			players.push_back(playerOne);
 			players.push_back(playerTwo);
 		}
-		//Dealer always last
+
 		else if(dealer == 2)
 		{
 			players.push_back(playerFour);
@@ -239,7 +253,7 @@ void PalaceGame::CreatePlayers(const int PLAYERCOUNT, vector<Player> &players, c
 			players.push_back(playerTwo);
 			players.push_back(playerThree);
 		}
-		//Dealer always last
+	
 		else if(dealer == 3)
 		{
 			players.push_back(playerOne);
@@ -249,7 +263,7 @@ void PalaceGame::CreatePlayers(const int PLAYERCOUNT, vector<Player> &players, c
 		}
 		else
 		{
-			cout << "Something went wrong IN CreatePlayers ** PLAYER ORDER '4' **" << endl;
+			cout << "Something went wrong IN CreatePlayers ** PLAYER ORDER '4' **" << endl; 
 		}
 		
 		cout << "Players Total: " << players.size() << endl;
@@ -258,6 +272,7 @@ void PalaceGame::CreatePlayers(const int PLAYERCOUNT, vector<Player> &players, c
 			cout << players[i].getName() << endl;
 		}
 	}//end elseif
+
 	else
 	{
 		cout << "something went wrong IN CreatePlayers ** NON legal amount of players **" << endl;
@@ -266,89 +281,85 @@ void PalaceGame::CreatePlayers(const int PLAYERCOUNT, vector<Player> &players, c
 
 void PalaceGame::CreateDeck(vector<Card> &deck)
 {
-		for(int r=2; r<15; r++)
+	//Create cards 2 - 14 since no cards in a regular deck of cards have a rank 0 or 1 (11 = jack | 12 = queen | 13 = king | 14 = ace)
+	for(int r=2; r<15; r++)
+	{
+		// make sure a 0 or 1 was not created somehow
+		if(r == 0 || r == 1)
 		{
-			if(r == 0 || r == 1)
+			cout << "ERROR IN CREATE DECK **CREATION LOOP**" << endl;
+		}
+		//create suits 1 - 4 (1 = Club | 2 = Spade | 3 = heart | 4 = diamonds)
+		for(int s=1; s<=4; s++)
+		{
+			if(s==1)
 			{
-				cout << "ERROR IN CREATE DECK **CREATION LOOP**" << endl;
-			}
+				Card card(r, 'C');
+				deck.push_back(card);
+			}//end if
+			else if(s==2)
+			{
+				Card card(r, 'S');
+				deck.push_back(card);
+			}//end elseif
+			else if(s==3)
+			{
+				Card card(r, 'H');
+				deck.push_back(card);
+			}//end elseif
+			else if(s==4)
+			{
+				Card card(r, 'D');
+				deck.push_back(card);
+			}//end elseif
+			else
+			{
+				cout << "Something went wrong IN CreateDeck ** s != 1-4" << endl;
+			}//end else
+		}//end for
+	}//end for
 
-			for(int s=1; s<=4; s++)
+	//always should be 52 during creation
+	if(deck.size() == 52)
+	{
+		//make sure there are no duplicate cards
+		for(int i=0; i<deck.size(); i++)
+		{
+			Card cardCheck = deck[i];
+			//Test cardCheck against entire deck
+			for(int j=0; j<deck.size(); j++)
 			{
-				if(s==1)
+				if(cardCheck.getRank() == deck[j].getRank() 
+					&& cardCheck.getSuit() == deck[j].getSuit()
+					&& i != j)
 				{
-					Card card(r, 'C');
-					deck.push_back(card);
+					cout << "Something went wrong IN CreateDeck 3 ** MULTIPLE OF CARD: ";
+					cardCheck.DisplayCard();
+					cout << endl;
+					cout << "Location in deck vector: " << j << "**" << endl;
 				}//end if
-				else if(s==2)
-				{
-					Card card(r, 'S');
-					deck.push_back(card);
-				}//end elseif
-				else if(s==3)
-				{
-					Card card(r, 'H');
-					deck.push_back(card);
-				}//end elseif
-				else if(s==4)
-				{
-					Card card(r, 'D');
-					deck.push_back(card);
-				}//end elseif
-				else
-				{
-					cout << "Something went wrong IN CreateDeck ** s != 1-4" << endl;
-				}//end else
 			}//end for
 		}//end for
+	}//end if
 
-		//always should be 52 during creation
-		if(deck.size() == 52)
-		{
-			//make sure there are no duplicate cards
-			for(int i=0; i<deck.size(); i++)
-			{
-				Card cardCheck = deck[i];
-				
-				for(int j=0; j<deck.size(); j++)
-				{
-					if(cardCheck.getRank() == deck[j].getRank() 
-						&& cardCheck.getSuit() == deck[j].getSuit()
-						&& i != j)
-					{
-						cout << "Something went wrong IN CreateDeck 3 ** MULTIPLE OF CARD: ";
-						cardCheck.DisplayCard();
-						cout << endl;
-						cout << "Location in deck vector: " << j << "**" << endl;
-					}//end if
-				}//end for
+	else
+	{
+		cout << "Something went wrong IN CreateDeck 2 ** DECK != 52 **" << endl;
+	}//end else
 
-			}//end for
-		}//end if
-		else
-		{
-			cout << "Something went wrong IN CreateDeck 2 ** DECK != 52 **" << endl;
-		}//end else
-
-		cout << "DECK SIZE: " << deck.size() << endl;
+	cout << "DECK SIZE: " << deck.size() << endl;
 }//end CreateDeck
 
 void PalaceGame::ShuffleDeck(vector<Card> &deck)
 {
+	//Declare local variables
 	srand(time(NULL));
 	Card temp;
 	Card temp2;
 	Card temp3;
 	int r, r2, r3;
-
-	cout << "Deck total: " << deck.size() << endl;
-	cout << "----- Deck UNShuffled -----" << endl;
-	/*for(int t=0; t<52; t++)
-	{
-		cout << "Card at " << t << "- rank: " << deck[t].getRank() 
-			<< " suit: " << deck[t].getSuit() << endl;
-	}*/
-
+	
+	//Confirm deck size has not changed yet
 	if(deck.size() == 52)
 	{
 		for(int i = 0; i < 52; i++)
@@ -369,16 +380,7 @@ void PalaceGame::ShuffleDeck(vector<Card> &deck)
 	else
 	{
 		cout << "Something went wrong IN ShuffleDeck ** DECK != 52 **" << endl;
-	}//end else
-	
-	/*cout << "Deck total: " << deck.size() << endl;
-	cout << "----- Deck Shuffled -----" << endl;
-	for(int i=0; i<52; i++)
-	{
-		cout << "Card at " << i << "- rank: " << deck[i].getRank() 
-			<< " suit: " << deck[i].getSuit() << endl;
-	}*/
-	
+	}//end else	
 }//end ShuffleDeck
 
 void PalaceGame::DealGame(const int PLAYERCOUNT)
@@ -513,25 +515,34 @@ void PalaceGame::PlayGame(const int PLAYERCOUNT)
 	while(!gameover)
 	{
 		cout << players[turn].getName() << " It's you're turn!" << endl;
-		//if(drawPile.size() != 0)
-		//{
-			if(midPile.size() == 0)
+		if(players[turn].getHandCount() == 0 && drawPile.size() == 0)
+		{
+			if(players[turn].getTopOfPalaceCount() != 0)
 			{
-				cout << "Mid Pile is empty, play anything you want " << players[turn].getName() << endl;
-				PlayCard();
-				DrawCards(turn);
+				players[turn].setHand(players[turn].getTopOfPalace());		
 			}
-			else if(midPile.size() > 0)
+
+			else if(players[turn].getPalaceCount() != 0)
 			{
-				PlayCard();
-				DrawCards(turn);
+				PlayFromPalace();
 			}
-			else
-			{
-				cout << "Something went wrong IN PlayGame ** MIDPILE DOESNT EXIST? ** " << endl;
-		
-			}
-		//}
+		}
+		PlayCard();
+		//check drawPile size here to avoid unneeded function calls
+		if(drawPile.size() != 0)
+		{
+			DrawCards(turn);
+		}
+
+		if(players[turn].getHandCount() == 0 && players[turn].getTopOfPalaceCount() == 0 && players[turn].getPalaceCount() == 0)
+		{
+			cout << "A winner has been decided! Congradulations Player " << players[turn].getName() << endl;
+			gameover = true;
+		}
+		else
+		{
+			IncrementTurn();
+		}
 	}
 	if(gameover)
 	{
@@ -554,15 +565,15 @@ void PalaceGame::DrawCards(const int turn)
 
 			if(drawPile.back().getRank() == midPile.back().getRank())
 			{
-				cout << "You drew a card with the same rank as what was just played, it has been played for you! You draw again." << endl;
+				cout << "You drew a card with the same rank as what was just played, it has been played for you! You draw again." << endl; // may need to adjust and give option
 				
-				if(drawPile.size != 0)
+				if(drawPile.size() != 0)
 				{
 
 				}
 			
 			}
-			drawPile.erase(drawPile.end());
+			drawPile.erase(drawPile.end()-1);
 		}
 	}
 	else if(drawPile.size() == 0)
@@ -575,7 +586,16 @@ void PalaceGame::DrawCards(const int turn)
 	}
 }
 
-// &&& CURRENT STOPPING POINT - WORKING ON EVALUATING CARD AND WHAT CARDS ARE AVAILABLE &&&
+void PalaceGame::PickUpMidPile()
+{
+	players[turn].setHand(midPile);
+	midPile.clear();
+	if(midPile.size() != 0)
+	{
+		cout << "Error in PickUpMidPile" << endl;
+	}
+}
+
 void PalaceGame::PlayCard()
 {
 	//May move functionality to playGame and make PlayCard simply add card to midPile
@@ -596,10 +616,10 @@ void PalaceGame::PlayCard()
 		if(isPlayable(players[turn].getHandCard(cardChoice)))
 		{
 			Card playersCard;
-			playersCard = players[turn].getHandCard(cardChoice);
-
 			midPile.push_back(players[turn].getHandCard(cardChoice));
-			//players[turn].removeHandCard(cardChoice); // may need to move removecard to various functions
+			playersCard = players[turn].getHandCard(cardChoice);
+			players[turn].removeHandCard(cardChoice);
+			turnover = true;
 
 			if(isWildCard(playersCard))
 			{
@@ -611,12 +631,13 @@ void PalaceGame::PlayCard()
 			}// end if
 			else
 			{
-				midPile.push_back(players[turn].getHandCard(cardChoice));
-				players[turn].removeHandCard(cardChoice);
+				cout << "Next players turn!" << endl;
 			}
-
 		}
-		
+		else
+		{
+			cout << "You have selected a card that is unable to be played, please choose again" << endl;
+		}	
 	}
 }
 
@@ -686,6 +707,7 @@ bool PalaceGame::isWildCard(Card &card)
 void PalaceGame::playMultiple(Card &playersCard)
 {
 	int multiCardPlayInput;
+
 	cout << "Would you like to play cards of the same rank?" << endl;
 	cout << "1. Yes, all! \n" 
 		<< "2. Yes, but not all! \n" 
@@ -745,36 +767,126 @@ void PalaceGame::playMultiple(Card &playersCard)
 
 void PalaceGame::PlayWildCard(Card &wildCard)
 {
-	int cardChoice;
-	if(wildCard.getRank() == 2)
+	int wildCardChoice;
+	do
 	{
-		midPile.push_back(wildCard);
-		
-		cout << "You played a 2, please play another card... You may play anything!" << endl;
-		players[turn].DisplayHand();
-		cin >> cardChoice;
-	
-		while(cardChoice < 0 || cardChoice >= players[turn].getHandCount())
-		{
-			cout << "Please enter a valid choice: " << endl;
-			cin >> cardChoice;
-		}
-		//working here!!!! may need to recursively call playwildcard after a wild is chosen to allow for multiple wilds.
-		//or just do a checkmultiple + playmultiple inside playwildcard
 
+		if(wildCard.getRank() == 2)
+		{
+			midPile.push_back(wildCard);
+			
+			cout << "You played a 2, please play another card... You may play anything!" << endl;
+			players[turn].DisplayHand();
+			cin >> wildCardChoice;
+		
+			while(wildCardChoice < 0 || wildCardChoice >= players[turn].getHandCount())
+			{
+				cout << "Please enter a valid choice: " << endl;
+				cin >> wildCardChoice;
+			}
+			wildCard = players[turn].getHandCard(wildCardChoice);
+
+			if(isWildCard(wildCard))
+			{
+				cout << "You have selected another wild card" << endl;
+				players[turn].removeHandCard(wildCardChoice);
+			}
+			else if(!isWildCard(wildCard) && wildCard.getRank() >= midPile.back().getRank())
+			{
+				midPile.push_back(wildCard);
+				players[turn].removeHandCard(wildCardChoice);
+			}
+			else
+			{
+				cout << "Something went terribly wrong in PlayWildCard ** not additional wild card **" << endl;
+			}	
+		}
+		
+		else if(wildCard.getRank() == 10)
+		{
+			midPile.push_back(wildCard);
+
+			deadPile = midPile;
+			midPile.clear();
+
+			if(deadPile.size() != 0 && midPile.size() == 0)
+			{			
+				cout << "You played a 10, please play another card... You may play anything!" << endl;
+				players[turn].DisplayHand();
+				cin >> wildCardChoice;
+		
+				while(wildCardChoice < 0 || wildCardChoice >= players[turn].getHandCount())
+				{
+					cout << "Please enter a valid choice: " << endl;
+					cin >> wildCardChoice;
+				}
+
+				wildCard = players[turn].getHandCard(wildCardChoice);
+
+				if(isWildCard(wildCard))
+				{
+					cout << "You have selected another wild card" << endl;
+					players[turn].removeHandCard(wildCardChoice);
+				}
+				else
+				{
+					midPile.push_back(wildCard);
+					players[turn].removeHandCard(wildCardChoice);
+
+					if(CheckMultiple(wildCard))
+					{
+						playMultiple(wildCard);
+					}
+				}
+
+			}
+			else
+			{
+				cout << "Something went terribly wrong in PlayWildCard ** rank = 10 **" << endl;
+			}
+		}
+	}while(isWildCard(wildCard));
+}
+
+void PalaceGame::PlayFromPalace()
+{
+	int palaceCardChoice;
+	cout << "You have " << players[turn].getPalaceCount() << " palace cards." << endl;
+	cout << "Please choose one of your remaining palace cards to play" << endl;
+	cin >> palaceCardChoice;
+
+	while(palaceCardChoice < 0 || palaceCardChoice  > players[turn].getPalaceCount())
+	{
+		cout << "Please enter a valid choice: " << endl;
+		cin >> palaceCardChoice;
 	}
 	
-	else if(players[turn].getHandCard(cardChoice).getRank() == 10)
+	if(isPlayable(players[turn].getHandCard(palaceCardChoice)))
 	{
-		deadPile = midPile;
-		/*if(deadPile.size() != 0)
+		Card playersCard;
+		midPile.push_back(players[turn].getHandCard(palaceCardChoice));
+		playersCard = players[turn].getHandCard(palaceCardChoice);
+		players[turn].removeHandCard(palaceCardChoice);
+
+		if(isWildCard(playersCard))
 		{
-			cout << "Print Dead Pile for Test:" << endl;
-			for (int i=0; i < deadPile.size(); i++)
-			{
-				deadPile[i].DisplayCard();
-			}
-		}*/
-		midPile.clear();
+			PlayWildCard(playersCard);
+		}
+		else if(CheckMultiple(playersCard))
+		{
+			playMultiple(playersCard);
+		}// end if
+		else
+		{
+			cout << "Next players turn!" << endl;
+		}
 	}
+
+	else if(players[turn].getHandCard(palaceCardChoice).getRank() < midPile.back().getRank())
+	{
+		PickUpMidPile();
+	}
+
+	PlayCard();
+
 }
