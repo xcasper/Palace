@@ -21,8 +21,10 @@ public:
 	void setPalaceCard(Card card);
 	int getTopOfPalaceCount();
 	Card getTopOfPalaceCard(int pos);
+	vector<Card> getTopOfPalace();
 	void setTopOfPalace(const Card CARD);
 	vector<Card> getHand();
+	void setHand(vector<Card> &cards);
 	int getHandCount();
 	Card getHandCard(int pos);
 	Card getHighestHandCard();

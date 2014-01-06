@@ -82,6 +82,11 @@ Card Player::getTopOfPalaceCard(int pos)
 	return topOfPalace[pos];
 }
 
+vector<Card> Player::getTopOfPalace()
+{
+	return topOfPalace;
+}
+
 void Player::setTopOfPalace(const Card CARD)
 {
 	topOfPalace.push_back(CARD);
@@ -90,6 +95,11 @@ void Player::setTopOfPalace(const Card CARD)
 vector<Card> Player::getHand()
 {
 	return hand;
+}
+
+void Player::setHand(vector<Card> &cards)
+{
+	hand = cards;
 }
 
 int Player::getHandCount()
@@ -122,16 +132,14 @@ void Player::setHandCard(Card card)
 
 void Player::removeHandCard(int pos)
 {
-	cout << "Hand count: " << getHandCount();
-	cout << "Before Remove Card: ";
+
 	hand[pos].DisplayCard();
 	cout << endl;
 	if(pos == hand.size()-1)
 	{
 		hand.pop_back();
-			cout << "After Remove Card: ";
-			hand[pos-1].DisplayCard();
-			cout << endl;
+		hand[pos-1].DisplayCard();
+		cout << endl;
 	}
 	else if(pos < hand.size()-1)
 	{

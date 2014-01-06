@@ -21,6 +21,7 @@ public:
 	void ChooseTopOfPalace(vector<Player> &players);
 	void PlayGame(const int PLAYERCOUNT);
 	void DrawCards(const int turn);
+	void PickUpMidPile();
 	void PlayCard();
 	Player CurrentTurn();
 	void IncrementTurn();
@@ -29,6 +30,7 @@ public:
 	bool isWildCard(Card &card);
 	void playMultiple(Card &playersCard);
 	void PlayWildCard(Card &wildCard);
+	void PlayFromPalace();
 private:
 	vector<Card> deck, drawPile, midPile, deadPile;
 	vector<Player> players;
