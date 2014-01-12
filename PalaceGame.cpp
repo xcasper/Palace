@@ -15,7 +15,7 @@ PalaceGame::PalaceGame()
 	//Initialize all variables
 	turn = 0;
 	gameover = false;
-
+        //
 	//declare local variables
 	int numPlayers;
 
