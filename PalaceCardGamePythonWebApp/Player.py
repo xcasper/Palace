@@ -8,142 +8,95 @@
 # Copyright:   (c) Craig 2014
 # Licence:     <your licence>
 #-------------------------------------------------------------------------------
-from card import Card
+from Card import Card
 
 class Player(object):
 
-    def Player(self):
-        #Initialize private variables
-        #Create control Card for monitoring
-        controlCard = Card()
-        controlCard.setRank(999)
-        controlCard.setSuit('U')
-        playerNum = -1337
-        name = "NOT SET"
-        palace =[]
-        topOfPalace = []
-        hand = []
+    #Initialize private variables
+    #Create control Card for monitoring
+    controlCard = Card()
+    controlCard.setRank(999)
+    controlCard.setSuit('U')
+    playerNum = -1337
+    name = "NOT SET"
+    palace =[]
+    topOfPalace = []
+    hand = []
 
-    ''' KEEP UNTIL I know i dont need to revert palace and topOfPalace to arrays
-    #Initialize palace and topOfPalace arrays
-    #ial cards are all control cards for monitoring
-    palace[0].push_back(controlCard)
-    palace[1] = controlCard
-    palace[2] = controlCard
-    topOfPalace[0] = controlCard
-    topOfPalace[1] = controlCard
-    topOfPalace[2] = controlCard'''
+    def getPlayerNum(self):
+        return self.playerNum
 
-    def getPlayerNum():
-        return playerNum
-
-
-    def setPlayerNum(CONST_PLAYERNUM):
+    def setPlayerNum(self, CONST_PLAYERNUM):
         self.playerNum = CONST_PLAYERNUM
 
+    def getName(self):
+        return self.name
 
-    def getName():
-        return name
-
-
-    def setName(name):
+    def setName(self, name):
         self.name = name
 
+    def getPalaceCount(self):
+        print "Palace Count: %s" % (len(self.palace))
+        return len(self.palace)
 
-    def getPalaceCount():
-        print "Palace Count: %s" % (len(palace))
-        return len(palace)
+    def getPalaceCard(self, pos):
+        return self.palace[pos]
 
-    def getPalaceCard(pos):
-        return palace[pos]
-
-    def setPalaceCard(card):
-        if(palace.size() > 3):
+    def setPalaceCard(self, card):
+        if len(self.palace) > 3:
             print "SOMEHOW IM TO HIGH"
         else:
-            palace.append(card)
+            self.palace.append(card)
 
-    def getTopOfPalaceCount():
-        return len(topOfPalace)
+    def getTopOfPalaceCount(self):
+        return len(self.topOfPalace)
 
-    def getTopOfPalaceCard(pos):
-        return topOfPalace[pos]
+    def getTopOfPalaceCard(self, pos):
+        return self.topOfPalace[pos]
 
+    def getTopOfPalace(self):
+        return self.topOfPalace
 
-    def getTopOfPalace():
-        return topOfPalace
+    def setTopOfPalace(self, CONST_CARD):
+        self.topOfPalace.append(CONST_CARD)
 
+    def getHand(self):
+        return self.hand
 
-    def setTopOfPalace(CONST_CARD):
-        topOfPalace.push_back(CONST_CARD)
+    def setHand(self, cards):
+        self.hand = cards
 
+    def getHandCount(self):
+        return len(self.hand)
 
-    def getHand():
-        return hand
+    def getHandCard(self, pos):
+        return self.hand[pos]
 
+    #throws error: TypeError: 'list' object is not callable -- appears at if Statement
+    def getHighestHandCard(self):
+        highestCard = self.hand[0]
+        for card in self.hand:
+            if self.hand(card).getRank() > highestCard.getRank():
+                highestCard = self.hand(card)
+                return highestCard
 
-    def setHand(cards):
-        hand = cards
+    def setHandCard(self, card):
+        self.hand.append(card)
 
-
-getHandCount()
-
-return hand.size()
-
-
-Card getHandCard( pos)
-
-return hand[pos]
-
-
-Card getHighestHandCard()
-
-Card highestCard = hand[0]
-for( i=1 i<=hand.size() i++)
-
-if(hand[i].getRank() > highestCard.getRank())
-
-highestCard = hand[i]
-
-
-return highestCard
-
-
-void setHandCard(Card card)
-
-hand.push_back(card)
-
-
-void removeHandCard( pos)
-
-
-hand[pos].DisplayCard()
-cout << endl
-if(pos == hand.size()-1)
-
-hand.pop_back()
-hand[pos-1].DisplayCard()
-cout << endl
-
-else if(pos < hand.size()-1)
-
-hand.erase(hand.begin()+pos)
-cout << "After Remove Card: "
-hand[pos].DisplayCard()
-cout << endl
-
-else
-
-cout << "Something went wrong IN removeHandCard ** ERASE DETERMINATION ** " << endl
-
-
-
-void DisplayHand()
-
-cout << "Current Hand: " << endl
-
-for( i=0 i<hand.size() i++)
-
-cout << i << ". " << hand[i].getRank()
-<< " " << hand[i].getSuit() << endl
+    def removeHandCard(self, pos):
+        self.hand[pos].DisplayCard()
+        if pos == len(self.hand) - 1:
+            self.hand.pop()
+        #requires testing to make sure pop is done right (may not remove intended card)
+        elif pos < len(self.hand) - 1:
+            hand.pop(pos)
+            print "After Remove Card: %s" % (self.hand(pos))
+        else:
+            print "Something went wrong IN removeHandCard ** ERASE DETERMINATION ** "
+    #same error as above: TypeError: 'list' object is not callable -- appears at print
+    def DisplayHand(self, hand):
+        print "Current Hand: "
+        for card in self.hand:
+            print card + ". " + hand(card).getRank()
+            + " " + hand(card).getSuit()
 
