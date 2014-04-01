@@ -12,16 +12,19 @@ from Card import Card
 
 class Player(object):
 
-    #Initialize private variables
-    #Create control Card for monitoring
-    controlCard = Card()
-    controlCard.setRank(999)
-    controlCard.setSuit('U')
-    playerNum = -1337
-    name = "NOT SET"
-    palace =[]
-    topOfPalace = []
-    hand = []
+    def __int__(self):
+        #Initialize private variables
+        #Create control Card for monitoring
+        controlCard = Card()
+        controlCard.setRank(999)
+        controlCard.setSuit('U')
+        playerNum = -1337
+        name = "NOT SET"
+        palace = []
+        topOfPalace = []
+        #code: type(var) -- will give type of whatever is between ()
+        #code: assert type(var) == type(Card())
+        hand = [Card(), Card()]
 
     def getPlayerNum(self):
         return self.playerNum
@@ -72,15 +75,18 @@ class Player(object):
     def getHandCard(self, pos):
         return self.hand[pos]
 
-    #throws error: TypeError: 'list' object is not callable -- appears at if Statement
+    #throws error: TypeError: 'list' object is not callable --
+    #appears at if Statement
     def getHighestHandCard(self):
         highestCard = self.hand[0]
-        for card in self.hand:
-            if self.hand(card).getRank() > highestCard.getRank():
+        print highestCard
+        for pos in range(len(self.hand)):
+            if self.hand[pos].getRank() > highestCard.getRank():
                 highestCard = self.hand(card)
                 return highestCard
 
     def setHandCard(self, card):
+        assert type(card) == type(Card())
         self.hand.append(card)
 
     def removeHandCard(self, pos):

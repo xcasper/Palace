@@ -17,12 +17,7 @@
 
 class Card(object):
 
-    #why arent the default values being set
-    def Card(self):
-        rank = 0
-        suit = 'N'
-
-    def Card(self, rank, suit):
+    def __init__(self, rank = 0, suit = 'N'):
     	self.rank = rank
     	self.suit = suit
 
