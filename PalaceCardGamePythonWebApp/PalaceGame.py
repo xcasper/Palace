@@ -550,12 +550,12 @@ class PalaceGame(object):
     #end PlayCard
 
 #maybe can be adjusted to just return the # of the current turn instead of the entire player?
-Player def CurrentTurn()
+Player def CurrentTurn(self):
 
 	return self.players[self.turn]
 
 
- def IncrementTurn()
+def IncrementTurn(self):
 
 	if(turn == players.size()-1)
 
