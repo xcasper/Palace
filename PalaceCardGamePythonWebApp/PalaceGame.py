@@ -16,6 +16,9 @@ First Refactoring: combine if/else statements that were seperated for error test
 Current Objective:
 
 Created by Craig Gleckman
+
+
+Potential Problem: Card distribution starts out with deck[i] for dealing cards then switches to drawpile[len(drawpile)-i]
 '''
 
 import sys
@@ -31,6 +34,8 @@ class PalaceGame(object):
     	numPlayers = 0
         players = []
         deck = []
+        drawpile = []
+        midPile = []
         playerOne = Player()
         playerTwo = Player()
         playerThree = Player()
@@ -53,562 +58,501 @@ class PalaceGame(object):
 
     	setupGame(CONST_PLAYERCOUNT)
 
-def setupGame(self, CONST_PLAYERCOUNT):
+    def setupGame(self, CONST_PLAYERCOUNT):
 
-	#Confirm valid player amount
-	if CONST_PLAYERCOUNT >= 2 and CONST_PLAYERCOUNT <= 4:
-	   print "Palace Card Game Loading..."
+    	#Confirm valid player amount
+    	if CONST_PLAYERCOUNT >= 2 and CONST_PLAYERCOUNT <= 4:
+    	   print "Palace Card Game Loading..."
 
-		#Allows each player to pick a name
-		CreatePlayers(CONST_PLAYERCOUNT, self.players,  self.dealer)
+           #Allows each player to pick a name
+    	   CreatePlayers(CONST_PLAYERCOUNT, self.players,  self.dealer)
 
-		#Make sure that players array (setup in CreatePlayers) worked
-		if len(self.players) == CONST_PLAYERCOUNT:
-			print "CreatePlayers ran successfully"
+            #Make sure that players array (setup in CreatePlayers) worked
+            if len(self.players) == CONST_PLAYERCOUNT:
+                print "CreatePlayers ran successfully"
 
-			CreateDeck(self.deck) #forms the 52 card deck
+                CreateDeck(self.deck) #forms the 52 card deck
 
-			#Make sure deck was created properly (52 cards)
-			if len(self.deck) == 52:
+    			#Make sure deck was created properly (52 cards)
+                if len(self.deck) == 52:
 
-				print "CreateDeck ran successfully"
-				ShuffleDeck(self.deck) #randomizes the deck (when created it is created in rank and suit order)
+    				print "CreateDeck ran successfully"
+    				ShuffleDeck(self.deck) #randomizes the deck (when created it is created in rank and suit order)
 
-				#Recheck deck size to make sure shuffle did not mess anything up
-				if len(self.deck) == 52:
+    				#Recheck deck size to make sure shuffle did not mess anything up
+    				if len(self.deck) == 52:
+                        #why does python think this is an error
+                        print "ShuffleDeck ran successfully"
+                        DealGame(CONST_PLAYERCOUNT) #Gives each player 3 palace cards and then 6 cards to start with
 
-					print "ShuffleDeck ran successfully"
-					DealGame(CONST_PLAYERCOUNT) #Gives each player 3 palace cards and then 6 cards to start with
+    					#Make sure each player has 6 cards in his/her hand at start
+    					for player in self.players:
+                            if self.players[player].getHandCount() != 6:
+    	                       print "Something went wrong WITH DealGame **"
+                               #TODO: does this break belong?
+    					       break
+    				        #end if
+    					 #end for
 
-					#Make sure each player has 6 cards in his/her hand at start
-					for player in self.players:
-						if self.players[player].getHandCount() != 6:
-							print "Something went wrong WITH DealGame **"
-                            #TODO: does this break belong?
-							break
-						 #end if
-					 #end for
-					ChooseTopOfPalace(self.players) #Asks each player which 3 cards from their hand they would like to use for the OnTopOfPalace cards
+                        ChooseTopOfPalace(self.players) #Asks each player which 3 cards from their hand they would like to use for the OnTopOfPalace cards
 
-					#Make sure each player has 3 cards left after choosing top of palace
-					for player in self.players:
-						if self.players[player].getTopOfPalaceCount() != 3
-							print "Something went wrong WITH TOPOFPALACE **"
-							break
-						#end if
-					#end for
-					PlayGame(CONST_PLAYERCOUNT) #Starts with player to the left of the dealer
+    					#Make sure each player has 3 cards left after choosing top of palace
+                        for player in self.players:
+                            if self.players[player].getTopOfPalaceCount() != 3:
+                                print "Something went wrong WITH TOPOFPALACE **"
+                                #TODO: Does this break belong
+    							break
+    						#end if
+    					#end for
 
-					#Gameover should be true after playgame is finished
-					if !gameover:
-						print "Something went wrong WITH playGame"
-					else:
-						print "Good-Bye!"
+    					PlayGame() #Starts with player to the left of the dealer
 
-				#end if
-				else:
-					print "Something went wrong WITH ShuffleDeck"
-				#end else
+    					#Gameover should be true after playgame is finished
+    					if !gameover:
+    						print "Something went wrong WITH playGame"
+    					else:
+    						print "Good-Bye!"
 
-			#end if
+    				#end if
+    				else:
+    					print "Something went wrong WITH ShuffleDeck"
+    				#end else
+
+    			#end if
+                else:
+    				print "Something went wrong WITH CreateDeck"
+    			#end else
+    		#end if
             else:
-				print "Something went wrong WITH CreateDeck"
-			#end else
-		#end if
-        else:
-            print "something went wrong WITH CreatePlayers"
-		#end else
+                print "something went wrong WITH CreatePlayers"
+    		#end else
 
-	else:
-        print "Palace Card Game NOT Loaded Successfully!"
+    	else:
+            print "Palace Card Game NOT Loaded Successfully!"
 
-#end setupGame
+    #end setupGame
 
-def CreatePlayers(self)
+    def CreatePlayers(self):
+    	#Declare local variables
+    	input = "None"
 
-	#Declare local variables
-	input = "None"
+    	#Depending on CONST_PLAYERCOUNT set players into a vector and let them give their name
+    	#Determine order of players in vector by who was randomly choosen as dealer
+    	if self.CONST_PLAYERCOUNT == 2:
+    		input = raw_input("Please give a name to Player1: ")
+            assert type(input) = type(str)
+    		self.playerOne.setName(input)
+
+    		input = raw_input("Please give a name to Player2: ")
+            assert type(input) = type(str)
+    		self.playerTwo.setName(input)
+
+    		#Dealer always last
+    		if self.dealer == 0:
+    			self.players.append(self.playerTwo)
+    			self.players.append(self.playerOne)
+
 
-	#Depending on CONST_PLAYERCOUNT set players into a vector and let them give their name
-	#Determine order of players in vector by who was randomly choosen as dealer
-	if self.CONST_PLAYERCOUNT == 2:
-		input = raw_input("Please give a name to Player1: ")
-		self.playerOne.setName(input)
+    		elif self.dealer == 1:
+    			self.players.append(self.playerOne)
+    			self.players.append(self.playerTwo)
 
-		input = raw_input("Please give a name to Player2: ")
-		self.playerTwo.setName(input)
+    		else:
+    			print "Something went wrong IN CreatePlayers ** PLAYER ORDER '2' **"
+
+    		print "Players Total: " + len(self.players)
+    		for player in self.players:
+    			print self.players[player].getName()
+    	#end if
 
-		#Dealer always last
-		if self.dealer == 0:
-			self.players.append(self.playerTwo)
-			self.players.append(self.playerOne)
-
-
-		elif self.dealer == 1:
-			self.players.append(self.playerOne)
-			self.players.append(self.playerTwo)
-
-		else:
-			print "Something went wrong IN CreatePlayers ** PLAYER ORDER '2' **"
-
-		print "Players Total: " + len(self.players)
-		for player in self.players:
-			print self.players[player].getName()
-	#end if
-
-	elif self.CONST_PLAYERCOUNT == 3:
-
-		input = raw_input("Please give a name to Player1: ")
-		self.playerOne.setName(input)
-
-		input = raw_input("Please give a name to Player2: ")
-		self.playerTwo.setName(input)
-
-		input = raw_input("Please give a name to Player3: ")
-		self.playerThree.setName(input)
-
-		#Dealer always last
-		if self.dealer == 0:
-			self.players.append(self.playerTwo)
-			self.players.append(self.playerThree)
-			self.players.append(self.playerOne)
-
-		elif self.dealer == 1:
-			self.players.append(self.playerThree)
-			self.players.append(self.playerOne)
-			self.players.append(self.playerTwo)
-
-		elif self.dealer == 2:
-			self.players.append(self.playerOne)
-			self.players.append(self.playerTwo)
-			self.players.append(self.playerThree)
-
-		else:
-			print "Something went wrong IN CreatePlayers ** PLAYER ORDER '3' **"
-
-		print "Players Total: " + len(self.players)
-
-		for player in self.players:
-			print self.players[player].getName()
-	#end elif
-
-	elif self.CONST_PLAYERCOUNT == 4:
-
-		input = raw_input("Please give a name to Player1: ")
-        self.playerOne.setName(input)
-
-		input = raw_input("Please give a name to Player2: ")
-        self.playerTwo.setName(input)
-
-		input = raw_input("Please give a name to Player3: ")
-        self.playerThree.setName(input)
-
-		input = raw_input("Please give a name to Player4: ")
-		self.playerFour.setName(input)
-
-		#Dealer always last
-		if dealer == 0:
-			players.append(self.playerTwo)
-			players.append(self.playerThree)
-			players.append(self.playerFour)
-			players.append(self.playerOne)
-
-
-		elif dealer == 1:
-			players.append(self.playerThree)
-			players.append(self.playerFour)
-			players.append(self.playerOne)
-			players.append(self.playerTwo)
-
-		elif dealer == 2:
-			players.append(self.playerFour)
-			players.append(self.playerOne)
-			players.append(self.playerTwo)
-			players.append(self.playerThree)
-
-		elif dealer == 3:
-			players.append(self.playerOne)
-			players.append(self.playerTwo)
-			players.append(self.playerThree)
-			players.append(self.playerFour)
-
-		else:
-			print "Something went wrong IN CreatePlayers ** PLAYER ORDER '4' **"
-
-		print "Players Total: " + len(self.players)
-
-		for player in self.players:
-			print self.players[player].getName()
-
-	#end elif
-
-	else:
-		print "something went wrong IN CreatePlayers ** NON legal amount of players **"
-	#end else
-#end CreatePlayers
-
-def CreateDeck (self.deck):
-
-	#Create cards 2 - 14 since no cards in a regular deck of cards have a rank 0 or 1 (11 = jack | 12 = queen | 13 = king | 14 = ace)
-	for(int r=2 r<15 r++)
-
-		# make sure a 0 or 1 was not created somehow
-		if(r == 0 || r == 1)
-
-			print "ERROR IN CREATE DECK **CREATION LOOP**"
-
-		#create suits 1 - 4 (1 = Club | 2 = Spade | 3 = heart | 4 = diamonds)
-		for(int s=1 s<=4 s++)
-
-			if(s==1)
-
-				Card card(r, 'C')
-				deck.push_back(card)
-			#end if
-			else if(s==2)
-
-				Card card(r, 'S')
-				deck.push_back(card)
-			#end elseif
-			else if(s==3)
-
-				Card card(r, 'H')
-				deck.push_back(card)
-			#end elseif
-			else if(s==4)
-
-				Card card(r, 'D')
-				deck.push_back(card)
-			#end elseif
-			else
-
-				print "Something went wrong IN CreateDeck ** s != 1-4"
-			#end else
-		#end for
-	#end for
-
-	#always should be 52 during creation
-	if(deck.size() == 52)
-
-		#make sure there are no duplicate cards
-		for(int i=0 i<deck.size() i++)
-
-			Card cardCheck = deck[i]
-			#Test cardCheck against entire deck
-			for(int j=0 j<deck.size() j++)
-
-				if(cardCheck.getRank() == deck[j].getRank()
-					&& cardCheck.getSuit() == deck[j].getSuit()
-					&& i != j)
-
-					print "Something went wrong IN CreateDeck 3 ** MULTIPLE OF CARD: "
-					cardCheck.DisplayCard()
-					print endl
-					print "Location in deck vector: " << j << "**"
-				#end if
-			#end for
-		#end for
-	#end if
-
-	else
-
-		print "Something went wrong IN CreateDeck 2 ** DECK != 52 **"
-	#end else
-
-	print "DECK SIZE: " << deck.size()
-#end CreateDeck
-
-def ShuffleDeck(vector<Card> &deck)
-
-	#Declare local variables
-	srand(time(NULL))
-	Card temp
-	Card temp2
-	Card temp3
-	int r, r2, r3
-
-	#Confirm deck size has not changed yet
-	if(deck.size() == 52)
-
-		for(int i = 0 i < 52 i++)
-
-			r = rand() % 52
-			r2 = rand() % 52
-			r3 = rand() % 52
-
-			temp = deck[i]
-			deck[i] = deck[r]
-			deck[r] = deck[r2]
-			deck[r2] = deck[r3]
-			deck[r3] = temp
-
-		#end for
-	#end if
-
-	else
-
-		print "Something went wrong IN ShuffleDeck ** DECK != 52 **"
-	#end else
-#end ShuffleDeck
-
-def DealGame(const int CONST_PLAYERCOUNT)
-
-	#deal palace
-	for(int i=0 i<CONST_PLAYERCOUNT*3 i++)
-
-		if(i%CONST_PLAYERCOUNT==0)
-
-			players[0].setPalaceCard(deck[i])
-
-		else if(i%CONST_PLAYERCOUNT==1)
-
-			players[1].setPalaceCard(deck[i])
-
-		else if(i%CONST_PLAYERCOUNT==2)
-
-			players[2].setPalaceCard(deck[i])
-
-		else if(i%CONST_PLAYERCOUNT==3)
-
-			players[3].setPalaceCard(deck[i])
-
-	#end for
-
-	#erase cards used for Palace
-	for(int r=0 r<CONST_PLAYERCOUNT*3 r++)
-
-		deck.erase(deck.begin())
-
-
-	#check player hands
-	for(int i=0 i<CONST_PLAYERCOUNT i++)
-
-		print "Player " << i << "'s palace: "
-		for(int j=0 j<players[i].getPalaceCount() j++)
-
-			print "Card " << j << " = "
-			players[i].getPalaceCard(j).DisplayCard()
-			print endl
-
-
-
-	#deal initial 6 cards
-	for(int i=0 i<CONST_PLAYERCOUNT*6 i++)
-
-		if(i%CONST_PLAYERCOUNT==0)
-
-			players[0].setHandCard(deck[i])
-
-		else if(i%CONST_PLAYERCOUNT==1)
-
-			players[1].setHandCard(deck[i])
-
-		else if(i%CONST_PLAYERCOUNT==2)
-
-			players[2].setHandCard(deck[i])
-
-		else if(i%CONST_PLAYERCOUNT==3)
-
-			players[3].setHandCard(deck[i])
-
-
-
-	#erase cards used for initial deal
-	for(int r=0 r<CONST_PLAYERCOUNT*6 r++)
-
-		deck.erase(deck.begin())
-
-
-	drawPile = deck
-	deck.clear()
-#end DealGame
-
-def ChooseTopOfPalace(vector<Player> &players)
-
-	int cardChoice, counter = 0
-	do
-
-		while(counter < 3)
-
-			print players[turn].getName() << " Please choose number corresponding to the card you would like to be ontop of your palace: "
-			print "Current Cards: "
-
-			for(int i=0 i < players[turn].getHandCount() i++)
-
-				print i << ". "
-				players[turn].getHandCard(i).DisplayCard()
-				print endl
-
-
-			print "Choose TopOfPalace Card " << counter << ": "
-			cin >> cardChoice
-			print endl
-			if(cardChoice < 0 || cardChoice >= players[turn].getHandCount())
-
-				print "INVALID OPTION"
-				counter--
-
-			else if(cardChoice >= 0 && cardChoice < players[turn].getHandCount())
-
-				players[turn].setTopOfPalace(players[turn].getHandCard(cardChoice))
-				players[turn].removeHandCard(cardChoice)
-
-			counter++
-
-		counter = 0
-		IncrementTurn()
-	while(turn != 0)
-
-	print "****** PRINTING TOP OF PALACE CARDS FOR EACH PLAYER:******"
-	for(int y=0 y<players.size() y++)
-
-		print "Player " << y << ":"
-		print "Card 1:"
-		players[y].getTopOfPalaceCard(0).DisplayCard()
-
-		print "Card 2:"
-		players[y].getTopOfPalaceCard(1).DisplayCard()
-
-		print "Card 3:"
-		players[y].getTopOfPalaceCard(2).DisplayCard()
-
-
-
- def PlayGame(const int CONST_PLAYERCOUNT)
-
-	print "!!!!!!!!Current turn: " << turn
-	while(!gameover)
-
-		print players[turn].getName() << " It's you're turn!"
-		if(players[turn].getHandCount() == 0 && drawPile.size() == 0)
-
-			if(players[turn].getTopOfPalaceCount() != 0)
-
-				players[turn].setHand(players[turn].getTopOfPalace())
-
-
-			else if(players[turn].getPalaceCount() != 0)
-
-				PlayFromPalace()
-
-
-		PlayCard()
-		#check drawPile size here to a unneeded function calls
-		if(drawPile.size() != 0)
-
-			DrawCards(turn)
-
-
-		if(players[turn].getHandCount() == 0 && players[turn].getTopOfPalaceCount() == 0 && players[turn].getPalaceCount() == 0)
-
-			print "A winner has been decided! Congradulations Player " << players[turn].getName()
-			gameover = true
-
-		else
-
-			IncrementTurn()
-
-
-	if(gameover)
-
-		print "Thank you for playing Palace Card Game"
-
-	else
-
-		print "WTF WHY AM I RUNNING.. THIS IS BS.. I QUIT LIFE"
-
-
-
- def DrawCards(const int turn)
-
-
-	if(drawPile.size() != 0)
-
-		for(int i=0 i<3-players[turn].getHandCount() i++)
-
-			players[turn].setHandCard(drawPile.back())
-
-			if(drawPile.back().getRank() == midPile.back().getRank())
-
-				print "You drew a card with the same rank as what was just played, it has been played for you! You draw again."  # may need to adjust and give option
-
-				if(drawPile.size() != 0)
-
-
-
-
-
-			drawPile.erase(drawPile.end()-1)
-
-
-	else if(drawPile.size() == 0)
-
-		print "DrawPile is Empty!"
-
-	else
-
-		print "Something went wrong IN DrawCard"
-
-
-
- def PickUpMidPile()
-
-	players[turn].setHand(midPile)
-	midPile.clear()
-	if(midPile.size() != 0)
-
-		print "Error in PickUpMidPile"
-
-
-
- def PlayCard()
-
-	#May move functionality to playGame and make PlayCard simply add card to midPile
-	int cardChoice
-	bool turnover = false
-
-	while(turnover == false)
-
-		players[turn].DisplayHand()
-		cin >> cardChoice
-
-		while(cardChoice < 0 || cardChoice >= players[turn].getHandCount())
-
-			print "Please enter a valid choice: "
-			cin >> cardChoice
-
-
-		if(isPlayable(players[turn].getHandCard(cardChoice)))
-
-			Card playersCard
-			midPile.push_back(players[turn].getHandCard(cardChoice))
-			playersCard = players[turn].getHandCard(cardChoice)
-			players[turn].removeHandCard(cardChoice)
-			turnover = true
-
-			if(isWildCard(playersCard))
-
-				PlayWildCard(playersCard)
-
-			else if(CheckMultiple(playersCard))
-
-				playMultiple(playersCard)
-			# end if
-			else
-
-				print "Next players turn!"
-
-
-		else
-
-			print "You have selected a card that is unable to be played, please choose again"
-
-
-
-
+    	elif self.CONST_PLAYERCOUNT == 3:
+
+    		input = raw_input("Please give a name to Player1: ")
+            assert type(input) = type(str)
+    		self.playerOne.setName(input)
+
+    		input = raw_input("Please give a name to Player2: ")
+            assert type(input) = type(str)
+    		self.playerTwo.setName(input)
+
+    		input = raw_input("Please give a name to Player3: ")
+            assert type(input) = type(str)
+    		self.playerThree.setName(input)
+
+    		#Dealer always last
+    		if self.dealer == 0:
+    			self.players.append(self.playerTwo)
+    			self.players.append(self.playerThree)
+    			self.players.append(self.playerOne)
+
+    		elif self.dealer == 1:
+    			self.players.append(self.playerThree)
+    			self.players.append(self.playerOne)
+    			self.players.append(self.playerTwo)
+
+    		elif self.dealer == 2:
+    			self.players.append(self.playerOne)
+    			self.players.append(self.playerTwo)
+    			self.players.append(self.playerThree)
+
+    		else:
+    			print "Something went wrong IN CreatePlayers ** PLAYER ORDER '3' **"
+
+    		print "Players Total: " + len(self.players)
+
+    		for player in self.players:
+    			print self.players[player].getName()
+    	#end elif
+
+    	elif self.CONST_PLAYERCOUNT == 4:
+
+    		input = raw_input("Please give a name to Player1: ")
+            assert type(input) = type(str)
+            self.playerOne.setName(input)
+
+    		input = raw_input("Please give a name to Player2: ")
+            assert type(input) = type(str)
+            self.playerTwo.setName(input)
+
+    		input = raw_input("Please give a name to Player3: ")
+            assert type(input) = type(str)
+            self.playerThree.setName(input)
+
+    		input = raw_input("Please give a name to Player4: ")
+            assert type(input) = type(str)
+    		self.playerFour.setName(input)
+
+    		#Dealer always last
+    		if dealer == 0:
+    			self.players.append(self.playerTwo)
+    			self.players.append(self.playerThree)
+    			self.players.append(self.playerFour)
+    			self.players.append(self.playerOne)
+
+    		elif dealer == 1:
+    			self.players.append(self.playerThree)
+    			self.players.append(self.playerFour)
+    			self.players.append(self.playerOne)
+    			self.players.append(self.playerTwo)
+
+    		elif dealer == 2:
+    			self.players.append(self.playerFour)
+    			self.players.append(self.playerOne)
+    			self.players.append(self.playerTwo)
+    			self.players.append(self.playerThree)
+
+    		elif dealer == 3:
+    			self.players.append(self.playerOne)
+    			self.players.append(self.playerTwo)
+    			self.players.append(self.playerThree)
+    			self.players.append(self.playerFour)
+
+    		else:
+    			print "Something went wrong IN CreatePlayers ** PLAYER ORDER '4' **"
+
+    		print "Players Total: " + len(self.players)
+
+    		for player in self.players:
+    			print player.getName()
+    	#end elif
+
+    	else:
+    		print "something went wrong IN CreatePlayers ** NON legal amount of players **"
+    	#end else
+    #end CreatePlayers
+
+    def CreateDeck (self, self.deck):
+
+    	#Create cards 2 - 14 since no cards in a regular deck of cards have a rank 0 or 1 (11 = jack | 12 = queen | 13 = king | 14 = ace)
+    	for r in range(2, 14):
+            print "Testing %s" % r
+
+    		# make sure a 0 or 1 was not created somehow
+    		for s in range(1, 4):
+    			if s==1:
+                    card = Card(r, 'C')
+    				self.deck.append(card)
+    			#end if
+    			elif s==2:
+                    card = Card(r, 'S')
+    				self.deck.append(card)
+    			#end elseif
+    			elif s==3:
+                    card = Card(r, 'H')
+    				self.deck.append(card)
+    			#end elseif
+    			elif s==4:
+                    card = Card(r, 'S')
+                    self.deck.append(card)
+    			#end elseif
+    			else:
+    				print "Something went wrong IN CreateDeck ** s != 1-4"
+    			#end else
+    		#end for
+    	#end for
+
+    	#always should be 52 during creation
+    	if len(self.deck) == 52:
+    		#make sure there are no duplicate cards
+    		for num in range(len(self.deck)):
+    			cardCheck = self.deck[num]
+                assert type(cardCheck) = type(Card())
+    			#Test cardCheck against entire deck
+    			for n in range(len(self.deck)):
+    				if cardCheck.getRank() == self.deck[n].getRank()
+    					and cardCheck.getSuit() == self.deck[n].getSuit()
+    					and num != n:
+
+    					print "Something went wrong IN CreateDeck 3 ** MULTIPLE OF CARD: "
+    					cardCheck.DisplayCard()
+    					print "Location in deck vector: %s" % n
+                    #end if
+    			#end for
+    		#end for
+    	#end if
+
+    	else:
+    		print "Something went wrong IN CreateDeck 2 ** DECK != 52 **"
+    	#end else
+
+    	print "DECK SIZE: %s" % len(self.deck)
+    #end CreateDeck
+
+    def ShuffleDeck(self, self.deck)
+
+    	#Declare local variables
+    	temp1 = Card()
+    	temp2 = Card()
+    	temp3 = Card()
+    	r, r2, r3
+
+    	#Confirm deck size has not changed yet
+    	if len(self.deck) == 52:
+            for num in range(52):
+                r1 = random.randrange() % 52
+    			r2 = random.randrange() % 52
+    			r3 = random.randrange() % 52
+
+    			temp1 = self.deck[num]
+    			self.deck[num] = deck[r1]
+    			self.deck[r1] = self.deck[r2]
+    			self.deck[r2] = self.deck[r3]
+    			deck[r3] = temp
+    		#end for
+    	#end if
+
+    	else:
+    		print "Something went wrong IN ShuffleDeck ** DECK != 52 **"
+    	#end else
+    #end ShuffleDeck
+
+    def DealGame(self):
+    	#deal palace cards
+    	for i in range(CONST_PLAYERCOUNT*3):
+    		if i % self.CONST_PLAYERCOUNT == 0:
+    			self.players[0].setPalaceCard(self.deck[i])
+
+    		elif i % self.CONST_PLAYERCOUNT == 1:
+    			self.players[1].setPalaceCard(self.deck[i])
+
+    		elif i % self.CONST_PLAYERCOUNT == 2:
+    			self.players[2].setPalaceCard(self.deck[i])
+
+    		elif i % self.CONST_PLAYERCOUNT == 3:
+    			self.players[3].setPalaceCard(self.deck[i])
+    	#end for
+
+    	#erase cards used for Palace cards
+    	for r in range(self.CONST_PLAYERCOUNT*3):
+            self.deck.pop(0)
+
+    	#output player hands for testing
+        #TODO: Remove after testing/conversion to graphics
+    	for i in range(self.CONST_PLAYERCOUNT):
+    		print "Player ", n, "'s palace: "
+
+            for p in range(self.players[i].getPalaceCount()):
+                print "Card ", p, " = ", self.players[n].getPalaceCard(p).DisplayCard()
+
+    	#deal initial 6 cards
+    	for i in range(self.CONST_PLAYERCOUNT*6):
+    		if i % CONST_PLAYERCOUNT == 0:
+    			self.players[0].setHandCard(self.deck[i])
+
+    		elif i % CONST_PLAYERCOUNT == 1:
+    			self.players[1].setHandCard(self.deck[i])
+
+    		elif i % CONST_PLAYERCOUNT == 2:
+    			self.players[2].setHandCard(self.deck[i])
+
+    		elif i % CONST_PLAYERCOUNT == 3:
+    			self.players[3].setHandCard(self.deck[i])
+
+    	#erase cards used for initial deal
+        for r in range(self.CONST_PLAYERCOUNT*6):
+            self.deck.pop(0)
+
+        #move remaining cards to drawpile
+    	self.drawPile = self.deck
+    	self.deck = []
+    #end DealGame
+
+    def ChooseTopOfPalace(self):
+    	cardChoice = 0
+        counter = 0
+
+        while True:
+    		while counter < 3:
+    			print "%s Please choose number corresponding to the card you would like to be ontop of your palace: " % self.players[self.turn].getName()
+    			print "Current Cards: "
+
+    			for i in range(self.players[self.turn].getHandCount()):
+    				print i, ". "
+                    self.players[self.turn].getHandCard(i).DisplayCard()
+
+    			cardChoice = raw_input("Choose TopOfPalace Card ", counter, ": ")
+
+    			if cardChoice < 0 or cardChoice >= self.players[self.turn].getHandCount():
+    				print "INVALID OPTION"
+                    #so that it has the user retry adding a topofpalace card
+    				counter--
+
+    			elif cardChoice >= 0 and cardChoice < self.players[self.turn].getHandCount():
+    				self.players[self.turn].setTopOfPalace(self.players[self.turn].getHandCard(cardChoice))
+    				self.players[self.turn].removeHandCard(cardChoice)
+                #increment counter
+    			counter++
+
+            #reset to 0 so that it starts fresh for each player
+    		counter = 0
+            #increment the global turn variable
+    		IncrementTurn()
+
+            #test to break the outer while loop
+            if turn == 0:
+                break
+
+    	print "****** PRINTING TOP OF PALACE CARDS FOR EACH PLAYER:******"
+        #TODO: maybe adjust to get actual player object instead of length of players array
+    	for p in range(len(self.players)):
+    		print "Top Of Palace Cards for Player " , p, ":"
+    		print "Card 1:"
+    		self.players[p].getTopOfPalaceCard(0).DisplayCard()
+
+    		print "Card 2:"
+    		self.players[p].getTopOfPalaceCard(1).DisplayCard()
+
+    		print "Card 3:"
+    		self.players[p].getTopOfPalaceCard(2).DisplayCard()
+
+    def PlayGame(self):
+        print "!!!!!!!!Current turn: %s" % turn
+
+    	while !gameover:
+    		print self.players[self.turn].getName() << " It's you're turn!"
+    		if self.players[self.turn].getHandCount() == 0 and len(self.drawPile == 0):
+    			if self.players[self.turn].getTopOfPalaceCount() != 0:
+                    #may need to be adjusted to make topofpalace its own thing instead of being assigned to hand
+                    #this is because of how graphics will display everything -- not sure yet
+    				self.players[self.turn].setHand(self.players[self.turn].getTopOfPalace())
+
+    			elif self.players[self.turn].getPalaceCount() != 0:
+    				PlayFromPalace()
+                else:
+                    print "Potential Issue in PlayGame -- No cards to play?"
+            #end if
+    		PlayCard()
+
+        	#check drawPile size here to a unneeded function calls
+    		if len(self.drawPile) != 0):
+    			DrawCards(turn)
+
+
+    		if(self.players[self.turn].getHandCount() == 0 and self.players[self.turn].getTopOfPalaceCount() == 0 and self.players[self.turn].getPalaceCount() == 0 and len(self.drawPile == 0)):
+    			print "A winner has been decided! Congradulations Player %s" self.players[self.turn].getName()
+    			gameover = True
+    		else:
+    			IncrementTurn()
+        #end while loop
+    	if gameover:
+
+    		print "Thank you for playing Palace Card Game"
+
+    	else:
+    		print "WTF WHY AM I RUNNING.. THIS IS BS.. I QUIT LIFE"
+    #end PlayGame
+
+    def DrawCards(self):
+        if len(self.drawPile) != 0:
+            #TODO: convert forloop to python
+            for(int i=0 i<3-players[turn].getHandCount() i++):
+                self.players[self.turn].setHandCard(self.drawPile[len(self.drawPile) - 1])
+
+                #TODO: possibly incase in whileloop incase multiple cards are drawn of same rank
+    			if self.drawPile[len(self.drawPile) - 1].getRank() == self.midPile.back().getRank()):
+    				print "You drew a card with the same rank as what was just played, it has been played for you! You draw again."  # may need to adjust and give option
+                    #todo: still need?
+    				if(len(self.drawPile) != 0:
+                        print ""
+
+                #needs testing to make sure card removed properly
+    			self.drawPile.pop()
+
+
+    	elif len(self.drawPile) == 0:
+    		print "DrawPile is Empty!"
+
+    	else:
+    		print "Something went wrong IN DrawCard"
+
+    #end DrawCards
+
+    def PickUpMidPile(self):
+        self.players[self.turn].setHand(self.midPile)
+    	midPile = []
+        #make sure midpile cleared
+    	if len(self.midPile) != 0:
+            print "Error in PickUpMidPile"
+
+    #end PickUpMidPile
+
+    def PlayCard(self):
+        #TODO:May move functionality to playGame and make PlayCard simply add card to midPile
+    	cardChoice
+    	turnOver = False
+
+    	while !turnOver:
+    		self.players[self.turn].DisplayHand()
+    		cardChoice = raw_input("Choose a card to Play")
+
+    		while cardChoice < 0 or cardChoice >= self.players[self.turn].getHandCount():
+                cardChoice = raw_input("Please enter a valid choice: ")
+
+    		if isPlayable(self.players[self.turn].getHandCard(cardChoice)):
+    			playersCard = Card()
+    			self.midPile.append(self.players[self.turn].getHandCard(cardChoice))
+    			playersCard = self.players[self.turn].getHandCard(cardChoice)
+    			self.players[self.turn].removeHandCard(cardChoice)
+
+    			if isWildCard(playersCard):
+    				PlayWildCard(playersCard)
+
+    			elif CheckMultiple(playersCard):
+    				playMultiple(playersCard)
+
+    			else:
+    				print "Next players turn!"
+                    turnOver = True
+            # end if
+    		else:
+    			print "You have selected a card that is unable to be played, please choose again"
+
+    #end PlayCard
+
+#maybe can be adjusted to just return the # of the current turn instead of the entire player?
 Player def CurrentTurn()
 
-	return players[turn]
+	return self.players[self.turn]
 
 
  def IncrementTurn()

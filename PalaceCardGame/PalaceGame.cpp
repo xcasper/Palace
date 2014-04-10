@@ -526,6 +526,22 @@ void PalaceGame::PlayGame(const int PLAYERCOUNT)
 			{
 				PlayFromPalace();
 			}
+
+			else
+			{
+			/* 
+				may not need because of the check a few lines down being the same
+
+				//double check for winner
+				if(players[turn].getHandCount() == 0 && drawPile.size() == 0 && players[turn].getPalaceCount() == 0)
+				{
+					gameover = true;
+					cout << "Congradulations to Player: " << 
+				}
+			*/
+				// maybe add above code and then break out of loop?
+				cout << "Possible Issue in PlayGame check for cards to play **" << endl;
+			}
 		}
 		PlayCard();
 		//check drawPile size here to avoid unneeded function calls
