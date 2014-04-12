@@ -138,6 +138,7 @@ class Player(object):
     #same error as above: TypeError: 'list' object is not callable -- appears at print
     def DisplayHand(self, hand):
         print "Current Hand: "
+
         for card in self.hand:
             print card.DisplayCard()
 

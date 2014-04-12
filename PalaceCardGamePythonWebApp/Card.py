@@ -53,6 +53,7 @@ class Card(object):
 
         elif(len(suit) == 1 or suit == 'U'):
             self.suit = suit
+
         else:
             print "Something went seriously wrong in setSuit in Card"
 
