@@ -1,0 +1,16 @@
+Builder.load_string('''
+<GridLayout>
+    canvas.before:
+        BorderImage:
+            # BorderImage behaves like the CSS BorderImage
+            border: 10, 10, 10, 10
+            source: 'C:/Users/Craig/Documents/GitHub/Palace/PalaceCardGamePythonWebApp/Kivy/tablecutout.png'
+            pos: self.pos
+            size: self.size
+
+<RootWidget>
+    GridLayout:
+        size_hint: .9, .9
+        pos_hint: {'center_x': .5, 'center_y': .5}
+        rows:1
+''')
