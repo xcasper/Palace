@@ -72,7 +72,7 @@ class PalaceGame(FloatLayout):
 
         # let's add a Widget to this layout
         self.add_widget(
-                        Button(
+                        Rectangle(
                                 text="Test",
                                 size_hint= (.1, .1),
                                 pos_hint={'center_x':.25,
@@ -80,7 +80,7 @@ class PalaceGame(FloatLayout):
 
     #just for testing how kivy functions -- remove for actual game
     def on_touch_down(self, touch):
-        with self.btn:
+        with self.canvas.before:
             Color(0, 0, 1)
             #diameter
             d = 60.

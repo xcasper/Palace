@@ -19,26 +19,26 @@ from Card import Card
 
 class Player(object):
 
-    def __int__(self):
+    def __init__(self):
         #Initialize private variables
         #Create control Card for monitoring
-        controlCard = Card()
-        controlCard.setRank(999)
-        controlCard.setSuit('U')
-        CONST_PLAYERNUM = -1337
-        name = "NOT SET"
-        palace = []
-        topOfPalace = []
+        self.controlCard = Card()
+        self.controlCard.setRank(999)
+        self.controlCard.setSuit('U')
+        self.CONST_PLAYERNUM = -1337
+        self.name = "NOT SET"
+        self.palace = []
+        self.topOfPalace = []
         #code: type(var) -- will give type of whatever is between ()
         #code: assert type(var) == type(Card())
-        hand = []
+        self.hand = []
 
     def getPlayerNum(self):
         return self.playerNum
 
     def setPlayerNum(self, playerNum):
         if self.CONST_PLAYERNUM == -1337:
-            assert type(playerNum) == type(int)
+            assert type(playerNum) == type(int())
             self.CONST_PLAYERNUM = playerNum
         else:
             print "Error in setPlayerNum: Attempting to change player number after initial set"
@@ -53,7 +53,8 @@ class Player(object):
         if self.name == "NOT SET":
             #add while loop till passes assert
             try:
-                assert type(name) == type(str)
+                print "Name type: ", type(name), type(str())
+                assert type(name) == type(str())
             except AssertionError:
                 #determine type and if callable turn to string
                 print "Assert failed in setName"
@@ -66,7 +67,7 @@ class Player(object):
         return len(self.palace)
 
     def getPalaceCard(self, pos):
-        assert type(pos) == type(int)
+        assert type(pos) == type(int())
         if type(self.palace[pos]) == type(Card()):
             return self.palace[pos]
         #add further functionality to deal with errors: Convert to Card if possible?
@@ -75,8 +76,9 @@ class Player(object):
 
     def setPalaceCard(self, card):
         assert type(card) == type(Card())
-        if len(self.palace) > 0 and len(self.palace) < 4:
+        if len(self.palace) < 4:
             self.palace.append(card)
+            print "Appending Card: ", card.getRank(), card.getSuit(), "Turn: ", self.getName()
         else:
             print "Error in setPalaceCard: To to many/little amount of cards in Palace"
 
@@ -84,7 +86,7 @@ class Player(object):
         return len(self.topOfPalace)
 
     def getTopOfPalaceCard(self, pos):
-        assert type(pos) == type(int)
+        assert type(pos) == type(int())
         assert type(self.topOfPalace[pos]) == type(Card())
         return self.topOfPalace[pos]
 
@@ -107,7 +109,7 @@ class Player(object):
         return len(self.hand)
 
     def getHandCard(self, pos):
-        assert type(pos) == type(int)
+        assert type(pos) == type(int())
         return self.hand[pos]
 
     #throws error: TypeError: 'list' object is not callable --
@@ -125,20 +127,20 @@ class Player(object):
         self.hand.append(card)
 
     def removeHandCard(self, pos):
-        assert type(pos) == type(int)
+        assert type(pos) == type(int())
         self.hand[pos].DisplayCard()
         if pos == len(self.hand) - 1:
             self.hand.pop()
         #requires testing to make sure pop is done right (may not remove intended card)
         elif pos < len(self.hand) - 1:
-            hand.pop(pos)
+            self.hand.pop(pos)
             print "After Remove Card: %s" % (self.hand[pos].DisplayCard())
         else:
             print "Something went wrong IN removeHandCard ** ERASE DETERMINATION ** "
     #same error as above: TypeError: 'list' object is not callable -- appears at print
-    def DisplayHand(self, hand):
+    def DisplayHand(self):
         print "Current Hand: "
-
+        num = -1
         for card in self.hand:
-            print card.DisplayCard()
-
+            num += 1
+            print "%s. %s" % (num, card.DisplayCard())
