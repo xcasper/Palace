@@ -1,14 +1,16 @@
 from kivy.base import runTouchApp
 from kivy.lang import Builder
+from kivy.app import App
 
 from kivy.uix.widget import Widget
+
 
 from kivy.core.window import Window
 from kivy.core.image import Image
 from kivy.properties import ObjectProperty
 
 Builder.load_string('''
-<Root>:
+<LayoutTree>:
     PalaceGame:
         pos: 800, 600
     PlayerOneCardHolder:
@@ -29,39 +31,90 @@ Builder.load_string('''
 
 <PlayerOneCardHolder>:
     canvas:
-        Color:
-            rgba: 0, 0, 0, .5
         Rectangle:
+            source: '2_spade_bot.png'
             pos: self.pos
-            size: 200, 50
+            size: 15, 50
 
 <PlayerTwoCardHolder>:
     canvas:
-        Color:
-            rgba: 0, 0, 0, .5
         Rectangle:
+            source: '2_spade_left.png'
             pos: self.pos
-            size: 50, 200
+            size: 50, 15
+        Rectangle:
+            source: '2_spade_left.png'
+            pos: 150, 240
+            size: 50, 15
+        Rectangle:
+            source: '2_spade_left.png'
+            pos: 150, 255
+            size: 50, 15
+        Rectangle:
+            source: '2_spade_left.png'
+            pos: 150, 270
+            size: 50, 15
+        Rectangle:
+            source: '2_spade_left.png'
+            pos: 150, 285
+            size: 50, 15
+        Rectangle:
+            source: '2_spade_left.png'
+            pos: 150, 300
+            size: 50, 15
+        Rectangle:
+            source: '2_spade_left.png'
+            pos: 150, 315
+            size: 50, 15
+        Rectangle:
+            source: '2_spade_left.png'
+            pos: 150, 330
+            size: 50, 15
+        Rectangle:
+            source: '2_spade_left.png'
+            pos: 150, 345
+            size: 50, 15
+        Rectangle:
+            source: '2_spade_left.png'
+            pos: 150, 360
+            size: 50, 15
+        Rectangle:
+            source: '2_spade_left.png'
+            pos: 150, 375
+            size: 50, 15
+        Rectangle:
+            source: '2_spade_left.png'
+            pos: 150, 390
+            size: 50, 15
+        Rectangle:
+            source: '2_spade_left.png'
+            pos: 150, 405
+            size: 50, 15
+        Rectangle:
+            source: '2_spade_left.png'
+            pos: 150, 420
+            size: 50, 15
+
 
 <PlayerThreeCardHolder>:
     canvas:
-        Color:
-            rgba: 0, 0, 0, .5
         Rectangle:
+            source: '2_spade_top.png'
             pos: self.pos
-            size: 200, 50
+            size: 15, 50
 
 <PlayerFourCardHolder>:
     canvas:
-        Color:
-            rgba: 0, 0, 0, .5
         Rectangle:
-            texture: self.card.texture
+            source: '2_spade_right.png'
             pos: self.pos
-            size: 50, 200
+            size: 50, 15
 ''')
 
-class Root(Widget):
+class LayoutTree(Widget):
+    pass
+
+class botCards(Widget):
     pass
 
 class PalaceGame(Widget):
@@ -77,10 +130,9 @@ class PlayerThreeCardHolder(Widget):
     pass
 
 class PlayerFourCardHolder(Widget):
-    card = ObjectProperty(None)
+    pass
 
-    def __init__(self, **kw):
-        super(PlayerFourCardHolder, self).__init__(**kw)
-        self.card = Image('chips.png')
+class PalaceGameApp(App):
+    pass
 
-runTouchApp(Root())
+runTouchApp(LayoutTree())
